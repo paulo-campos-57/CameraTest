@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdn.rawgit.com/exif-js/exif-js/master/exif.js"></script>
+    <script src="script.js" defer></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="camera-section">
+        <h2>Abrir Câmera</h2>
+        <button id="openCameraButton" class="camera-button"><i class="fas fa-camera"></i> Abrir Câmera</button>
+        <video id="video" width="320" height="240" autoplay></video>
+        <button id="takePhotoButton" class="camera-button">Tirar Foto</button>
+        <canvas id="canvas" width="320" height="240" style="display: none;"></canvas>
+        <img id="photo" src="#" alt="Foto tirada" style="display: none;">
+        <p id="cameraLocation">Geolocalização: </p>
+        <form id="photoForm" method="POST" enctype="multipart/form-data">
+            <input type="hidden" id="photoData" name="photoData">
+            <button type="submit" class="submit-button">Enviar Foto</button>
+        </form>
+    </div>
+    <div class="upload-section">
+        <h2>Inserir Imagem</h2>
+        <input type="file" id="imageInput" accept="image/*">
+        <img id="uploadedImage" src="#" alt="Sua imagem" style="display: none;">
+        <p id="uploadLocation">Geolocalização: </p>
+    </div>
+    <div class="pdf-upload-section">
+        <h2>Inserir PDF</h2>
+        <input type="file" id="pdfInput" accept="application/pdf">
+        <p id="pdfFileName">Nenhum arquivo selecionado</p>
+        <button id="submitPdfButton" class="submit-button">Enviar PDF</button>
+    </div>
+</body>
+</html>

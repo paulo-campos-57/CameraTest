@@ -1,0 +1,75 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f2f2f2;
+    color: #333;
+    margin: 0;
+    padding: 20px;
+}
+
+h2 {
+    color: #4CAF50;
+}
+
+.camera-section, .upload-section, .pdf-upload-section {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.camera-button, .submit-button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.camera-button:hover, .submit-button:hover {
+    background-color: #45a049;
+}
+
+#imageInput, #pdfInput {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    padding: 13px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+#imageInput:hover, #pdfInput:hover {
+    background-color: #45a049;
+}
+
+video, canvas, img {
+    display: block;
+    margin: 20px auto;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+p {
+    text-align: center;
+}
+
+form {
+    text-align: center;
+}
+
+input[type="file"] {
+    display: block;
+    margin: 20px auto;
+}
