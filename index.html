@@ -13,9 +13,11 @@
     <div class="camera-section">
         <h2>Abrir Câmera</h2>
         <button id="openCameraButton" class="camera-button"><i class="fas fa-camera"></i> Abrir Câmera</button>
-        <video id="video" width="320" height="240" autoplay></video>
-        <button id="takePhotoButton" class="camera-button">Tirar Foto</button>
-        <canvas id="canvas" width="320" height="240" style="display: none;"></canvas>
+        <div id="cameraContainer">
+            <video id="video" width="320" height="240" autoplay></video>
+            <button id="takePhotoButton" class="camera-button">Tirar Foto</button>
+            <canvas id="canvas" width="320" height="240" style="display: none;"></canvas>
+        </div>
         <img id="photo" src="#" alt="Foto tirada" style="display: none;">
         <p id="cameraLocation">Geolocalização: </p>
         <form id="photoForm" method="POST" enctype="multipart/form-data">

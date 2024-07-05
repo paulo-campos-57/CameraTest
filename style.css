@@ -14,6 +14,13 @@ h2 {
     text-align: center;
 }
 
+#cameraContainer {
+    position: relative;
+    width: 100%;
+    text-align: center;
+    display: none;
+}
+
 .camera-section, .upload-section, .pdf-upload-section {
     background-color: #fff;
     border-radius: 8px;

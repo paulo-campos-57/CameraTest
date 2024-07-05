@@ -20,6 +20,7 @@ let userLatitude = null;
 
         // JavaScript para abrir a câmera e tirar foto
         const openCameraButton = document.getElementById('openCameraButton');
+        const cameraContainer = document.getElementById('cameraContainer');
         const takePhotoButton = document.getElementById('takePhotoButton');
         const video = document.getElementById('video');
         const canvas = document.getElementById('canvas');
@@ -31,7 +32,11 @@ let userLatitude = null;
 
         openCameraButton.addEventListener('click', async () => {
             try {
+                cameraContainer.style.display = 'block';
+                // Versão celular
                 stream = await navigator.mediaDevices.getUserMedia({ video: {facingMode: { exact: 'environment' }} });
+                // Versão PC
+                // stream = await navigator.mediaDevices.getUserMedia({ video:true });
                 video.srcObject = stream;
             } catch (err) {
                 console.error('Erro ao acessar a câmera: ', err);
@@ -39,6 +44,7 @@ let userLatitude = null;
         });
 
         takePhotoButton.addEventListener('click', () => {
+            cameraContainer.style.display = 'none';
             context.drawImage(video, 0, 0, canvas.width, canvas.height);
             canvas.toBlob(blob => {
                 const reader = new FileReader();
