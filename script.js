@@ -31,7 +31,7 @@ let userLatitude = null;
 
         openCameraButton.addEventListener('click', async () => {
             try {
-                stream = await navigator.mediaDevices.getUserMedia({ video: true });
+                stream = await navigator.mediaDevices.getUserMedia({ video: {facingMode: { exact: 'environment' }} });
                 video.srcObject = stream;
             } catch (err) {
                 console.error('Erro ao acessar a câmera: ', err);
