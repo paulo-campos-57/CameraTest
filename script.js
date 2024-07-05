@@ -1,5 +1,13 @@
-let userLatitude = null;
+        let userLatitude = null;
         let userLongitude = null;
+        const submitButton = document.getElementById('sendPhoto');
+
+        const changeSubmitButtonState = (isDisabled) => {
+            submitButton.style.opacity = isDisabled ? 0.5 : 1;
+            submitButton.disabled = isDisabled;
+        }
+
+        changeSubmitButtonState(true);
 
         // Solicitar permissão para acessar a localização do usuário
         function requestLocation() {
@@ -30,6 +38,7 @@ let userLatitude = null;
         const photoData = document.getElementById('photoData');
         let stream;
 
+       
         openCameraButton.addEventListener('click', async () => {
             try {
                 cameraContainer.style.display = 'block';
@@ -45,6 +54,7 @@ let userLatitude = null;
 
         takePhotoButton.addEventListener('click', () => {
             cameraContainer.style.display = 'none';
+            changeSubmitButtonState(false);
             context.drawImage(video, 0, 0, canvas.width, canvas.height);
             canvas.toBlob(blob => {
                 const reader = new FileReader();
