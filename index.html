@@ -19,17 +19,18 @@
             <canvas id="canvas" width="320" height="240" style="display: none;"></canvas>
         </div>
         <img id="photo" src="#" alt="Foto tirada" style="display: none;">
-        <p id="cameraLocation">Geolocalização: </p>
+        <p id="cameraLocation"></p>
         <form id="photoForm" method="POST" enctype="multipart/form-data">
             <input type="hidden" id="photoData" name="photoData">
-            <button type="submit" class="submit-button" id="sendPhoto">Enviar Foto</button>
+            <button type="submit" class="submit-button" id="sendTakenPhoto">Enviar Foto</button>
         </form>
     </div>
     <div class="upload-section">
         <h2>Inserir Imagem</h2>
         <input type="file" id="imageInput" accept="image/*">
         <img id="uploadedImage" src="#" alt="Sua imagem" style="display: none;">
-        <p id="uploadLocation">Geolocalização: </p>
+        <p id="uploadLocation"></p>
+        <button type="submit" class="submit-button" id="sendUploadedPhoto">Enviar Foto</button>
     </div>
     <div class="pdf-upload-section">
         <h2>Inserir PDF</h2>

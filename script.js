@@ -1,13 +1,20 @@
         let userLatitude = null;
         let userLongitude = null;
-        const submitButton = document.getElementById('sendPhoto');
+        const submitButtonTakenPhoto = document.getElementById('sendTakenPhoto');
+        const submitButtonUploadedPhoto = document.getElementById('sendUploadedPhoto');
 
-        const changeSubmitButtonState = (isDisabled) => {
-            submitButton.style.opacity = isDisabled ? 0.5 : 1;
-            submitButton.disabled = isDisabled;
+        const changeTakenPhotoSubmitButtonState = (isDisabled) => {
+            submitButtonTakenPhoto.style.opacity = isDisabled ? 0.5 : 1;
+            submitButtonTakenPhoto.disabled = isDisabled;
         }
 
-        changeSubmitButtonState(true);
+        const changeUploadedPhotoSubmitButtonState = (isDisabled) => {
+            submitButtonUploadedPhoto.style.opacity = isDisabled ? 0.5 : 1;
+            submitButtonUploadedPhoto.disabled = isDisabled;
+        }
+
+        changeTakenPhotoSubmitButtonState(true);
+        changeUploadedPhotoSubmitButtonState(true);
 
         // Solicitar permissão para acessar a localização do usuário
         function requestLocation() {
@@ -43,9 +50,9 @@
             try {
                 cameraContainer.style.display = 'block';
                 // Versão celular
-                stream = await navigator.mediaDevices.getUserMedia({ video: {facingMode: { exact: 'environment' }} });
+                //stream = await navigator.mediaDevices.getUserMedia({ video: {facingMode: { exact: 'environment' }} });
                 // Versão PC
-                // stream = await navigator.mediaDevices.getUserMedia({ video:true });
+                 stream = await navigator.mediaDevices.getUserMedia({ video:true });
                 video.srcObject = stream;
             } catch (err) {
                 console.error('Erro ao acessar a câmera: ', err);
@@ -54,7 +61,6 @@
 
         takePhotoButton.addEventListener('click', () => {
             cameraContainer.style.display = 'none';
-            changeSubmitButtonState(false);
             context.drawImage(video, 0, 0, canvas.width, canvas.height);
             canvas.toBlob(blob => {
                 const reader = new FileReader();
@@ -65,11 +71,15 @@
                     stream.getTracks().forEach(track => track.stop());
                     video.srcObject = null;
 
-                    // Usar a localização do navegador
+
+                    //Usar a localização do navegador
                     if (userLatitude && userLongitude) {
                         cameraLocation.textContent = `Geolocalização: Latitude: ${userLatitude}, Longitude: ${userLongitude}`;
+                        changeTakenPhotoSubmitButtonState(false);
                     } else {
-                        cameraLocation.textContent = "Geolocalização: sem geolocalização";
+                        photo.style.display = 'none';
+                        locationElement.textContent = '';
+                        changeTakenPhotoSubmitButtonState(true);
                     }
                 };
                 reader.readAsDataURL(blob);
@@ -122,13 +132,17 @@
                 const lat = EXIF.getTag(this, "GPSLatitude");
                 const lon = EXIF.getTag(this, "GPSLongitude");
                 if (lat && lon) {
+                    changeUploadedPhotoSubmitButtonState(false);
                     const latRef = EXIF.getTag(this, "GPSLatitudeRef") || "N";
                     const lonRef = EXIF.getTag(this, "GPSLongitudeRef") || "W";
                     const latitude = convertDMSToDD(lat, latRef);
                     const longitude = convertDMSToDD(lon, lonRef);
                     locationElement.textContent = `Geolocalização: Latitude: ${latitude}, Longitude: ${longitude}`;
                 } else {
-                    locationElement.textContent = "Geolocalização: sem geolocalização";
+                    alert("Por favor, envie uma foto com geolocalização");
+                    changeUploadedPhotoSubmitButtonState(true);
+                    locationElement.textContent = '';
+                    uploadedImage.style.display = 'none';
                 }
             });
         }
