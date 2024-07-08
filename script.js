@@ -1,13 +1,20 @@
-        let userLatitude = null;
-        let userLongitude = null;
-        const submitButton = document.getElementById('sendPhoto');
+let userLatitude = null;
+let userLongitude = null;
+const submitButtonTakenPhoto = document.getElementById('sendTakenPhoto');
+const submitButtonUploadedPhoto = document.getElementById('sendUploadedPhoto');
 
-        const changeSubmitButtonState = (isDisabled) => {
-            submitButton.style.opacity = isDisabled ? 0.5 : 1;
-            submitButton.disabled = isDisabled;
-        }
+const changeTakenPhotoSubmitButtonState = (isDisabled) => {
+    submitButtonTakenPhoto.style.opacity = isDisabled ? 0.5 : 1;
+    submitButtonTakenPhoto.disabled = isDisabled;
+}
 
-        changeSubmitButtonState(true);
+const changeUploadedPhotoSubmitButtonState = (isDisabled) => {
+    submitButtonUploadedPhoto.style.opacity = isDisabled ? 0.5 : 1;
+    submitButtonUploadedPhoto.disabled = isDisabled;
+}
+
+changeTakenPhotoSubmitButtonState(true);
+changeUploadedPhotoSubmitButtonState(true);
 
 // Solicitar permissão para acessar a localização do usuário
 function requestLocation() {
@@ -38,43 +45,46 @@ const photo = document.getElementById('photo');
 const photoData = document.getElementById('photoData');
 let stream;
 
-       
-        openCameraButton.addEventListener('click', async () => {
-            try {
-                cameraContainer.style.display = 'block';
-                // Versão celular
-                stream = await navigator.mediaDevices.getUserMedia({ video: {facingMode: { exact: 'environment' }} });
-                // Versão PC
-                // stream = await navigator.mediaDevices.getUserMedia({ video:true });
-                video.srcObject = stream;
-            } catch (err) {
-                console.error('Erro ao acessar a câmera: ', err);
+
+openCameraButton.addEventListener('click', async () => {
+    try {
+        cameraContainer.style.display = 'block';
+        // Versão celular
+        //stream = await navigator.mediaDevices.getUserMedia({ video: {facingMode: { exact: 'environment' }} });
+        // Versão PC
+         stream = await navigator.mediaDevices.getUserMedia({ video:true });
+        video.srcObject = stream;
+    } catch (err) {
+        console.error('Erro ao acessar a câmera: ', err);
+    }
+});
+
+takePhotoButton.addEventListener('click', () => {
+    cameraContainer.style.display = 'none';
+    context.drawImage(video, 0, 0, canvas.width, canvas.height);
+    canvas.toBlob(blob => {
+        const reader = new FileReader();
+        reader.onload = () => {
+            photo.src = reader.result;
+            photo.style.display = 'block';
+            photoData.value = reader.result;
+            stream.getTracks().forEach(track => track.stop());
+            video.srcObject = null;
+
+
+            //Usar a localização do navegador
+            if (userLatitude && userLongitude) {
+                cameraLocation.textContent = `Geolocalização: Latitude: ${userLatitude}, Longitude: ${userLongitude}`;
+                changeTakenPhotoSubmitButtonState(false);
+            } else {
+                photo.style.display = 'none';
+                locationElement.textContent = '';
+                changeTakenPhotoSubmitButtonState(true);
             }
-        });
-
-        takePhotoButton.addEventListener('click', () => {
-            cameraContainer.style.display = 'none';
-            changeSubmitButtonState(false);
-            context.drawImage(video, 0, 0, canvas.width, canvas.height);
-            canvas.toBlob(blob => {
-                const reader = new FileReader();
-                reader.onload = () => {
-                    photo.src = reader.result;
-                    photo.style.display = 'block';
-                    photoData.value = reader.result;
-                    stream.getTracks().forEach(track => track.stop());
-                    video.srcObject = null;
-
-                    // Usar a localização do navegador
-                    if (userLatitude && userLongitude) {
-                        cameraLocation.textContent = `Geolocalização: Latitude: ${userLatitude}, Longitude: ${userLongitude}`;
-                    } else {
-                        cameraLocation.textContent = "Geolocalização: sem geolocalização";
-                    }
-                };
-                reader.readAsDataURL(blob);
-            }, 'image/jpeg');
-        });
+        };
+        reader.readAsDataURL(blob);
+    }, 'image/jpeg');
+});
 
 // JavaScript para carregar imagem
 const imageInput = document.getElementById('imageInput');
@@ -116,22 +126,26 @@ submitPdfButton.addEventListener('click', () => {
     alert('PDF enviado com sucesso!');
 });
 
-        // Função para extrair dados EXIF e geolocalização
-        function getExifData(file, locationElement) {
-            EXIF.getData(file, function() {
-                const lat = EXIF.getTag(this, "GPSLatitude");
-                const lon = EXIF.getTag(this, "GPSLongitude");
-                if (lat && lon) {
-                    const latRef = EXIF.getTag(this, "GPSLatitudeRef") || "N";
-                    const lonRef = EXIF.getTag(this, "GPSLongitudeRef") || "W";
-                    const latitude = convertDMSToDD(lat, latRef);
-                    const longitude = convertDMSToDD(lon, lonRef);
-                    locationElement.textContent = `Geolocalização: Latitude: ${latitude}, Longitude: ${longitude}`;
-                } else {
-                    locationElement.textContent = "Geolocalização: sem geolocalização";
-                }
-            });
+// Função para extrair dados EXIF e geolocalização
+function getExifData(file, locationElement) {
+    EXIF.getData(file, function() {
+        const lat = EXIF.getTag(this, "GPSLatitude");
+        const lon = EXIF.getTag(this, "GPSLongitude");
+        if (lat && lon) {
+            changeUploadedPhotoSubmitButtonState(false);
+            const latRef = EXIF.getTag(this, "GPSLatitudeRef") || "N";
+            const lonRef = EXIF.getTag(this, "GPSLongitudeRef") || "W";
+            const latitude = convertDMSToDD(lat, latRef);
+            const longitude = convertDMSToDD(lon, lonRef);
+            locationElement.textContent = `Geolocalização: Latitude: ${latitude}, Longitude: ${longitude}`;
+        } else {
+            alert("Por favor, envie uma foto com geolocalização");
+            changeUploadedPhotoSubmitButtonState(true);
+            locationElement.textContent = '';
+            uploadedImage.style.display = 'none';
         }
+    });
+}
 
 // Função para converter de DMS (graus, minutos, segundos) para DD (graus decimais)
 function convertDMSToDD(dms, ref) {
@@ -145,14 +159,3 @@ function convertDMSToDD(dms, ref) {
     }
     return dd;
 }
-
-// Redirecionar com coordenadas
-const sendButton = document.getElementById('sendButton');
-sendButton.addEventListener('click', () => {
-    if (userLatitude && userLongitude) {
-        const url = `http://127.0.0.1:5500/mapas.html?latitude=${userLatitude}&longitude=${userLongitude}`;
-        window.location.href = url;
-    } else {
-        alert('Geolocalização não disponível.');
-    }
-});
